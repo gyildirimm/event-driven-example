@@ -1,0 +1,9 @@
+using NotificationService.Domain.Entities;
+using Shared.Kernel.Application.Repositories;
+
+namespace NotificationService.Application.Repositories;
+
+public interface INotificationRepository : IQuery<Notification>, IAsyncRepository<Notification, Guid>
+{
+    
+}

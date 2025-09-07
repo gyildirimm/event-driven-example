@@ -1,0 +1,96 @@
+@StockServicePresentationHostAddress = http://localhost:6262/stock-api
+
+### Variables
+@stockId = 110e8400-e29b-41d4-a716-446655440000
+@productId = 233e8400-e29b-41d4-a716-446655440001
+@orderId = 330e8400-e29b-41d4-a716-446655440002
+
+### Get all stocks
+GET {{StockServicePresentationHostAddress}}/api/stock
+Accept: application/json
+
+### Get all stocks with query parameters
+GET {{StockServicePresentationHostAddress}}/api/stock?page=1&pageSize=10&productName=Sample
+Accept: application/json
+
+### Get stock by ID
+GET {{StockServicePresentationHostAddress}}/api/stock/{{stockId}}
+Accept: application/json
+
+### Get stock by product ID
+GET {{StockServicePresentationHostAddress}}/api/stock/product/{{productId}}
+Accept: application/json
+
+### Get available stocks
+GET {{StockServicePresentationHostAddress}}/api/stock/available?page=1&pageSize=10
+Accept: application/json
+
+### Create new stock
+POST {{StockServicePresentationHostAddress}}/api/stock
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "productName": "Sample Product",
+  "quantity": 100,
+  "minimumStockLevel": 10,
+  "unitPrice": 25.99
+}
+
+### Update stock
+PUT {{StockServicePresentationHostAddress}}/api/stock/{{stockId}}
+Content-Type: application/json
+
+{
+  "productName": "Updated Product Name",
+  "quantity": 150,
+  "minimumStockLevel": 15,
+  "unitPrice": 29.99
+}
+
+### Update stock quantity
+PATCH {{StockServicePresentationHostAddress}}/api/stock/{{stockId}}/quantity
+Content-Type: application/json
+
+200
+
+### Add stock quantity
+PATCH {{StockServicePresentationHostAddress}}/api/stock/{{stockId}}/add-quantity
+Content-Type: application/json
+
+50
+
+### Reserve stock
+POST {{StockServicePresentationHostAddress}}/api/stock/reserve
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "orderId": "{{orderId}}",
+  "quantity": 5,
+  "reservationReason": "Order placement"
+}
+
+### Release reservation
+POST {{StockServicePresentationHostAddress}}/api/stock/release-reservation?productId={{productId}}&orderId={{orderId}}&quantity=5
+
+### Confirm reservation
+POST {{StockServicePresentationHostAddress}}/api/stock/confirm-reservation?productId={{productId}}&orderId={{orderId}}&quantity=5
+
+### Check stock availability
+GET {{StockServicePresentationHostAddress}}/api/stock/check-availability?productId={{productId}}&requiredQuantity=10
+Accept: application/json
+
+### Get available quantity for product
+GET {{StockServicePresentationHostAddress}}/api/stock/available-quantity/{{productId}}
+Accept: application/json
+
+### Validate stock
+GET {{StockServicePresentationHostAddress}}/api/stock/{{stockId}}/validate
+Accept: application/json
+
+### Weather forecast (example endpoint)
+GET {{StockServicePresentationHostAddress}}/weatherforecast/
+Accept: application/json
+
+###

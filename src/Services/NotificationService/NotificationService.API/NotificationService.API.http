@@ -1,0 +1,283 @@
+### NotificationService API Test Requests
+
+@baseUrl = http://localhost:5204
+@notificationId = {{$guid}}
+@recipient = test@example.com
+@phoneNumber = +905551234567
+
+### 1. Tüm bildirimleri getir
+GET {{baseUrl}}/api/notifications
+Content-Type: application/json
+
+###
+
+### 2. Sayfalama ile bildirimleri getir
+GET {{baseUrl}}/api/notifications?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 3. Filtreli bildirim listesi - Status ile
+GET {{baseUrl}}/api/notifications?status=0&page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 4. Filtreli bildirim listesi - Channel (Email) ile
+GET {{baseUrl}}/api/notifications?channel=1&page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 5. Filtreli bildirim listesi - Recipient ile
+GET {{baseUrl}}/api/notifications?recipient={{recipient}}&page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 6. Tarih aralığı ile filtreli bildirim listesi
+GET {{baseUrl}}/api/notifications?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z&page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 7. ID ile bildirim getir
+GET {{baseUrl}}/api/notifications/{{notificationId}}
+Content-Type: application/json
+
+###
+
+### 8. Alıcıya göre bildirimleri getir
+GET {{baseUrl}}/api/notifications/recipient/{{recipient}}?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 9. Telefon numarasına göre bildirimleri getir
+GET {{baseUrl}}/api/notifications/recipient/{{phoneNumber}}?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 10. SMS bildirimi oluştur
+POST {{baseUrl}}/api/notifications/sms
+Content-Type: application/json
+
+{
+  "recipient": "{{phoneNumber}}",
+  "text": "Siparişiniz başarıyla oluşturuldu. Sipariş numaranız: #12345"
+}
+
+###
+
+### 11. SMS bildirimi oluştur - Sipariş onayı
+POST {{baseUrl}}/api/notifications/sms
+Content-Type: application/json
+
+{
+  "recipient": "{{phoneNumber}}",
+  "text": "Siparişiniz onaylandı ve kargoya verildi. Takip numaranız: TK123456789"
+}
+
+###
+
+### 12. SMS bildirimi oluştur - Sipariş iptali
+POST {{baseUrl}}/api/notifications/sms
+Content-Type: application/json
+
+{
+  "recipient": "{{phoneNumber}}",
+  "text": "Siparişiniz iptal edildi. Ödeme iadeniz 3-5 iş günü içinde hesabınıza geçecektir."
+}
+
+###
+
+### 13. Email bildirimi oluştur
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Sipariş Onayı",
+  "body": "<h1>Siparişiniz Alındı</h1><p>Sayın müşterimiz, siparişiniz başarıyla alınmıştır.</p><ul><li>Sipariş No: #12345</li><li>Toplam Tutar: 1.500 TL</li><li>Teslimat Süresi: 2-3 gün</li></ul><p>Teşekkür ederiz.</p>"
+}
+
+###
+
+### 14. Email bildirimi oluştur - Hoş geldin mesajı
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Hoş Geldiniz!",
+  "body": "<h1>E-ticaret platformumuza hoş geldiniz!</h1><p>Hesabınız başarıyla oluşturuldu.</p><p>İlk siparişinizde %10 indirim için kod: <strong>HOSGELDIN10</strong></p>"
+}
+
+###
+
+### 15. Email bildirimi oluştur - Şifre sıfırlama
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Şifre Sıfırlama",
+  "body": "<h1>Şifre Sıfırlama Talebi</h1><p>Şifrenizi sıfırlamak için aşağıdaki linke tıklayın:</p><a href='https://example.com/reset-password?token=abc123'>Şifremi Sıfırla</a><p>Bu link 24 saat geçerlidir.</p>"
+}
+
+###
+
+### 16. Email bildirimi oluştur - Stok bildirimi
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Ürün Stoğa Geldi!",
+  "body": "<h1>Beklediğiniz ürün stoğa geldi!</h1><p>Laptop - 16GB RAM modelimiz tekrar stoklarımızda.</p><p>Hemen sipariş vermek için: <a href='https://example.com/products/laptop'>Buraya tıklayın</a></p>"
+}
+
+###
+
+### 17. Email bildirimi oluştur - Kargo bildirimi
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Kargonuz Yolda!",
+  "body": "<h1>Siparişiniz Kargoya Verildi</h1><p>Sipariş No: #12345</p><p>Kargo Takip No: TK123456789</p><p>Tahmini teslimat: 2-3 gün</p><p>Kargonuzu takip etmek için: <a href='https://kargo.com/track/TK123456789'>Takip Et</a></p>"
+}
+
+###
+
+### VALIDATION TEST SCENARIOS
+
+### 18. SMS Validation Test - Boş recipient
+POST {{baseUrl}}/api/notifications/sms
+Content-Type: application/json
+
+{
+  "recipient": "",
+  "text": "Test mesajı"
+}
+
+###
+
+### 19. SMS Validation Test - Geçersiz telefon formatı
+POST {{baseUrl}}/api/notifications/sms
+Content-Type: application/json
+
+{
+  "recipient": "invalid-phone",
+  "text": "Test mesajı"
+}
+
+###
+
+### 20. SMS Validation Test - Çok uzun metin (160+ karakter)
+POST {{baseUrl}}/api/notifications/sms
+Content-Type: application/json
+
+{
+  "recipient": "{{phoneNumber}}",
+  "text": "Bu çok uzun bir SMS metnidir. Bu metin 160 karakterden fazla olacak şekilde yazılmıştır. SMS standartlarına göre tek bir SMS mesajı en fazla 160 karakter içerebilir. Bu sınırı aştığımızda validation hatası almalıyız."
+}
+
+###
+
+### 21. SMS Validation Test - Boş metin
+POST {{baseUrl}}/api/notifications/sms
+Content-Type: application/json
+
+{
+  "recipient": "{{phoneNumber}}",
+  "text": ""
+}
+
+###
+
+### 22. Email Validation Test - Geçersiz email formatı
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "invalid-email",
+  "subject": "Test konusu",
+  "body": "Test içeriği"
+}
+
+###
+
+### 23. Email Validation Test - Boş konu
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "",
+  "body": "Test içeriği"
+}
+
+###
+
+### 24. Email Validation Test - Çok kısa konu (< 3 karakter)
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Ab",
+  "body": "Test içeriği"
+}
+
+###
+
+### 25. Email Validation Test - Boş içerik
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Test konusu",
+  "body": ""
+}
+
+###
+
+### 26. Email Validation Test - Çok kısa içerik (< 10 karakter)
+POST {{baseUrl}}/api/notifications/email
+Content-Type: application/json
+
+{
+  "recipient": "{{recipient}}",
+  "subject": "Test konusu",
+  "body": "Kısa"
+}
+
+###
+
+### 27. Query Validation Test - Geçersiz sayfa numarası
+GET {{baseUrl}}/api/notifications?page=0&pageSize=10
+Content-Type: application/json
+
+###
+
+### 28. Query Validation Test - Çok büyük sayfa boyutu
+GET {{baseUrl}}/api/notifications?page=1&pageSize=150
+Content-Type: application/json
+
+###
+
+### 29. Query Validation Test - Gelecek tarih
+GET {{baseUrl}}/api/notifications?startDate=2025-12-31T00:00:00Z&page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 30. Query Validation Test - Ters tarih aralığı
+GET {{baseUrl}}/api/notifications?startDate=2024-12-31T00:00:00Z&endDate=2024-01-01T00:00:00Z&page=1&pageSize=10
+Content-Type: application/json
+
+###

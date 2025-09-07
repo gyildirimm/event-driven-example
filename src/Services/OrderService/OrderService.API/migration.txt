@@ -1,0 +1,15 @@
+cd /Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/src/Services/OrderService/OrderService.Persistence && dotnet ef migrations add AddShippingAndBillingAddresses --startup-project ../OrderService.API
+
+
+dotnet ef migrations remove --startup-project ../OrderService.API/OrderService.API.csproj
+
+dotnet ef database drop -f --startup-project ../OrderService.API/OrderService.API.csproj
+
+dotnet ef migrations add AddShippingAndBillingAddresses --startup-project ../OrderService.API
+
+
+
+
+docker:
+
+docker compose up --build orderservice-api

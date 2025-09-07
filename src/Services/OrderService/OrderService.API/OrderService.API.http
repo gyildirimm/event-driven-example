@@ -1,0 +1,130 @@
+### OrderService API Test Requests
+
+@baseUrl = http://localhost:6262/order-api
+@orderId = {{$guid}}
+@customerId = customer-123
+
+@productId = 220e8400-e29b-41d4-a716-446655440001
+
+### 1. Tüm siparişleri getir
+GET {{baseUrl}}/api/orders
+Content-Type: application/json
+
+###
+
+### 2. Sayfalama ile siparişleri getir
+GET {{baseUrl}}/api/orders?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 3. ID ile sipariş getir
+GET {{baseUrl}}/api/orders/{{orderId}}
+Content-Type: application/json
+
+###
+
+### 4. Müşteri ID'sine göre siparişleri getir
+GET {{baseUrl}}/api/orders/customer/{{customerId}}?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 5. Duruma göre siparişleri getir (Pending)
+GET {{baseUrl}}/api/orders/status/0?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 6. Duruma göre siparişleri getir (Confirmed)
+GET {{baseUrl}}/api/orders/status/1?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 7. Duruma göre siparişleri getir (Cancelled)
+GET {{baseUrl}}/api/orders/status/2?page=1&pageSize=10
+Content-Type: application/json
+
+###
+
+### 8. Yeni sipariş oluştur
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "{{customerId}}",
+  "customerName": "Ahmet Yılmaz",
+  "customerEmail": "ahmet@gmail.com",
+  "OrderLines": [
+    {
+      "productId": "{{productId}}",
+      "productName": "Laptop",
+      "quantity": 2,
+      "unitPrice": 15000.00
+    }
+  ]
+}
+
+###
+
+### 9. Siparişi onayla
+POST {{baseUrl}}/api/orders/{{orderId}}/confirm
+Content-Type: application/json
+
+###
+
+### 10. Siparişi iptal et
+POST {{baseUrl}}/api/orders/{{orderId}}/cancel
+Content-Type: application/json
+
+###
+
+### 11. Stok rezervasyonunu onayla
+POST {{baseUrl}}/api/orders/{{orderId}}/confirm-stock-reservation
+Content-Type: application/json
+
+###
+
+### 12. Stok rezervasyonunu başarısız işaretle
+POST {{baseUrl}}/api/orders/{{orderId}}/fail-stock-reservation
+Content-Type: application/json
+{
+  "reason": "Yetersiz stok"
+}
+
+###
+
+### 13. Siparişi son onayla (stok rezervasyonu sonrası)
+POST {{baseUrl}}/api/orders/{{orderId}}/confirm-order
+Content-Type: application/json
+
+###
+
+### Test Senaryosu: Tam sipariş akışı
+### 1. Önce sipariş oluştur
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "test-customer-001",
+  "customerName": "Test Müşteri",
+  "customerEmail": "test@example.com",
+  "items": [
+    {
+      "productId": "test-product-001",
+      "productName": "Test Ürün",
+      "quantity": 1,
+      "unitPrice": 100.00
+    }
+  ]
+}
+
+### 2. Oluşturulan siparişi getir (yukarıdaki response'dan ID'yi kopyala)
+# GET {{baseUrl}}/api/orders/{CREATED_ORDER_ID}
+
+### 3. Stok rezervasyonunu onayla
+# POST {{baseUrl}}/api/orders/{CREATED_ORDER_ID}/confirm-stock-reservation
+
+### 4. Siparişi son onayla
+# POST {{baseUrl}}/api/orders/{CREATED_ORDER_ID}/confirm-order

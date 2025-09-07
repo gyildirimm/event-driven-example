@@ -1,0 +1,139 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  ecommerce-yarp:
+    build:
+      context: "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example"
+      dockerfile: "Gateways/ECommerce.YARP/Dockerfile"
+      target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/JetBrains/RiderDebuggerTools/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57000"
+    - "--backend-port=57200"
+    - "--roslyn-worker-port=57462"
+    - "--timeout=60"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
+      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    image: "ecommerce.yarp:dev"
+    ports:
+    - "127.0.0.1:57062:57000"
+    - "127.0.0.1:57262:57200"
+    - "127.0.0.1:57462:57462"
+    volumes:
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/Gateways/ECommerce.YARP:/app:rw"
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
+    - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
+    - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
+    - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    working_dir: "/app"
+  notificationservice-api:
+    build:
+      context: "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example"
+      dockerfile: "src/Services/NotificationService/NotificationService.API/Dockerfile"
+      target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/JetBrains/RiderDebuggerTools/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57000"
+    - "--backend-port=57200"
+    - "--roslyn-worker-port=57463"
+    - "--timeout=60"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
+      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    image: "notificationservice.api:dev"
+    ports:
+    - "127.0.0.1:57063:57000"
+    - "127.0.0.1:57263:57200"
+    - "127.0.0.1:57463:57463"
+    volumes:
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/src/Services/NotificationService/NotificationService.API:/app:rw"
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
+    - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
+    - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
+    - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    working_dir: "/app"
+  orderservice-api:
+    build:
+      context: "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example"
+      dockerfile: "src/Services/OrderService/OrderService.API/Dockerfile"
+      target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/JetBrains/RiderDebuggerTools/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57000"
+    - "--backend-port=57200"
+    - "--roslyn-worker-port=57464"
+    - "--timeout=60"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
+      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    image: "orderservice.api:dev"
+    ports:
+    - "127.0.0.1:57064:57000"
+    - "127.0.0.1:57264:57200"
+    - "127.0.0.1:57464:57464"
+    volumes:
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/src/Services/OrderService/OrderService.API:/app:rw"
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
+    - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
+    - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
+    - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    working_dir: "/app"
+  stockservice-api:
+    build:
+      context: "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example"
+      dockerfile: "src/Services/StockService/StockService.API/Dockerfile"
+      target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/JetBrains/RiderDebuggerTools/linux-arm64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/JetBrains/RiderDebuggerTools/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57000"
+    - "--backend-port=57200"
+    - "--roslyn-worker-port=57465"
+    - "--timeout=60"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/JetBrains/RiderDebuggerTools"
+      RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    image: "stockservice.api:dev"
+    ports:
+    - "127.0.0.1:57065:57000"
+    - "127.0.0.1:57265:57200"
+    - "127.0.0.1:57465:57465"
+    volumes:
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/src/Services/StockService/StockService.API:/app:rw"
+    - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
+    - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
+    - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
+    - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    working_dir: "/app"

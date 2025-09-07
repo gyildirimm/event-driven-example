@@ -1,0 +1,192 @@
+﻿services:
+  ecommerce-yarp:
+    image: ecommerce.yarp
+    build:
+      context: .
+      dockerfile: Gateways/ECommerce.YARP/Dockerfile
+    ports:
+      - "6262:8080"
+    networks:
+      - ecommerce-network
+
+  orderservice-api:
+    image: orderservice.api
+    build:
+      context: .
+      dockerfile: src/Services/OrderService/OrderService.API/Dockerfile
+    environment:
+      - ConnectionStrings__OrderDatabase=Host=postgresql-order;Database=OrderServiceDb;Username=admin;Password=123456
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      postgresql-order:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+
+  postgresql-order:
+    image: postgres:15
+    container_name: postgresql-order
+    environment:
+      POSTGRES_DB: OrderServiceDb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_order_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d OrderServiceDb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    
+  stockservice-api:
+    image: stockservice.api
+    build:
+      context: .
+      dockerfile: src/Services/StockService/StockService.API/Dockerfile
+    environment:
+      - ConnectionStrings__StockDatabase=Host=postgresql-stock;Database=StockServiceDb;Username=admin;Password=123456
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      postgresql-stock:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+
+  postgresql-stock:
+    image: postgres:15
+    container_name: postgresql-stock
+    environment:
+      POSTGRES_DB: StockServiceDb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgresql_stock_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d StockServiceDb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+  
+  notificationservice-api:
+    image: notificationservice.api
+    build:
+      context: .
+      dockerfile: src/Services/NotificationService/NotificationService.API/Dockerfile
+    environment:
+      - ConnectionStrings__NotificationDatabase=Host=postgresql-notification;Database=NotificationServiceDb;Username=admin;Password=123456
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@rabbitmq:5672/
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      postgresql-notification:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+    restart: unless-stopped
+
+  postgresql-notification:
+    image: postgres:15
+    container_name: postgresql-notification
+    environment:
+      POSTGRES_DB: NotificationServiceDb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgresql_notification_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d NotificationServiceDb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+  
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-ecommerce
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - ecommerce-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin-order
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "7010:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - ecommerce-network
+    depends_on:
+      postgresql-order:
+        condition: service_healthy
+    restart: unless-stopped
+    
+  observability-seq:
+    image: datalust/seq:latest
+    container_name: observability-seq
+    ports:
+      - "9179:5341"
+      - "9180:80"
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - seq-data:/data
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
+
+volumes:
+  postgresql_order_data:
+  postgresql_stock_data:
+  postgresql_notification_data:
+  rabbitmq_data:
+  pgadmin_data:
+  seq-data:
+
