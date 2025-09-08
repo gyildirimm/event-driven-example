@@ -15,7 +15,7 @@ services:
     - "--mode=server"
     - "--frontend-port=57000"
     - "--backend-port=57200"
-    - "--roslyn-worker-port=57462"
+    - "--roslyn-worker-port=57400"
     - "--timeout=60"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
@@ -24,16 +24,16 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "ecommerce.yarp:dev"
     ports:
-    - "127.0.0.1:57062:57000"
-    - "127.0.0.1:57262:57200"
-    - "127.0.0.1:57462:57462"
+    - "127.0.0.1:57000:57000"
+    - "127.0.0.1:57200:57200"
+    - "127.0.0.1:57400:57400"
     volumes:
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/Gateways/ECommerce.YARP:/app:rw"
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
     - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
     - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
     - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_08_10_33_03:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"
   notificationservice-api:
     build:
@@ -50,7 +50,7 @@ services:
     - "--mode=server"
     - "--frontend-port=57000"
     - "--backend-port=57200"
-    - "--roslyn-worker-port=57463"
+    - "--roslyn-worker-port=57401"
     - "--timeout=60"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
@@ -58,16 +58,16 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "notificationservice.api:dev"
     ports:
-    - "127.0.0.1:57063:57000"
-    - "127.0.0.1:57263:57200"
-    - "127.0.0.1:57463:57463"
+    - "127.0.0.1:57001:57000"
+    - "127.0.0.1:57201:57200"
+    - "127.0.0.1:57401:57401"
     volumes:
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/src/Services/NotificationService/NotificationService.API:/app:rw"
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
     - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
     - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
     - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_08_10_33_03:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"
   orderservice-api:
     build:
@@ -84,7 +84,7 @@ services:
     - "--mode=server"
     - "--frontend-port=57000"
     - "--backend-port=57200"
-    - "--roslyn-worker-port=57464"
+    - "--roslyn-worker-port=57402"
     - "--timeout=60"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
@@ -92,16 +92,16 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "orderservice.api:dev"
     ports:
-    - "127.0.0.1:57064:57000"
-    - "127.0.0.1:57264:57200"
-    - "127.0.0.1:57464:57464"
+    - "127.0.0.1:57002:57000"
+    - "127.0.0.1:57202:57200"
+    - "127.0.0.1:57402:57402"
     volumes:
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/src/Services/OrderService/OrderService.API:/app:rw"
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
     - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
     - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
     - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_08_10_33_03:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"
   stockservice-api:
     build:
@@ -118,7 +118,7 @@ services:
     - "--mode=server"
     - "--frontend-port=57000"
     - "--backend-port=57200"
-    - "--roslyn-worker-port=57465"
+    - "--roslyn-worker-port=57403"
     - "--timeout=60"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
@@ -126,14 +126,14 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "stockservice.api:dev"
     ports:
-    - "127.0.0.1:57065:57000"
-    - "127.0.0.1:57265:57200"
-    - "127.0.0.1:57465:57465"
+    - "127.0.0.1:57003:57000"
+    - "127.0.0.1:57203:57200"
+    - "127.0.0.1:57403:57403"
     volumes:
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example/src/Services/StockService/StockService.API:/app:rw"
     - "/Users/goktugyildirim/Desktop/Projects/blog-article-examples/event-driven-order-stock-notification-example:/src:rw"
     - "/Users/goktugyildirim/.nuget/packages:/home/app/.nuget/packages"
     - "/Users/goktugyildirim/.local/share/JetBrains/RiderRemoteDebugger/2025.2.0.1/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
     - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_07_22_07_51:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/Users/goktugyildirim/Library/Logs/JetBrains/Rider2025.2/DebuggerWorker/JetBrains.Debugger.Worker.2025_9_08_10_33_03:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"

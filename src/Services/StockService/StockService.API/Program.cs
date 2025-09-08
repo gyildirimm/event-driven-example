@@ -9,6 +9,7 @@ using StockService.Persistence;
 using Shared.Kernel.Common.Middlewares;
 using StockService.Persistence.Contexts;
 using Serilog;
+using Shared.Kernel.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
@@ -85,61 +86,6 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-// Auto Migration - Uygulama başlatıldığında otomatik migration çalıştır
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<StockContext>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    
-    try
-    {
-        // PostgreSQL'in hazır olmasını bekle
-        WaitForDatabase(dbContext, logger);
-        
-        // Migration'ları uygula - EnsureCreated ile Migrate birlikte kullanılmaz
-        if (dbContext.Database.GetPendingMigrations().Any())
-        {
-            logger.LogInformation("Applying pending migrations...");
-            dbContext.Database.Migrate();
-            logger.LogInformation("Database migrations applied successfully.");
-        }
-        else
-        {
-            logger.LogInformation("No pending migrations found.");
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "An error occurred while migrating the database: {Message}", ex.Message);
-        // Migration hatası durumunda uygulamayı durdurmak için exception'ı yeniden fırlat
-        throw;
-    }
-}
-
-static void WaitForDatabase(StockContext dbContext, ILogger<Program> logger, int maxRetries = 30, int delaySeconds = 2)
-{
-    for (int i = 0; i < maxRetries; i++)
-    {
-        try
-        {
-            dbContext.Database.CanConnect();
-            logger.LogInformation("Successfully connected to the database.");
-            return;
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning("Database connection attempt {Attempt}/{MaxRetries} failed: {Message}", 
-                i + 1, maxRetries, ex.Message);
-            
-            if (i == maxRetries - 1)
-            {
-                logger.LogError("Failed to connect to database after {MaxRetries} attempts.", maxRetries);
-                throw;
-            }
-            
-            Task.Delay(TimeSpan.FromSeconds(delaySeconds)).Wait();
-        }
-    }
-}
+app.UseDatabaseMigrate<StockContext, Program>();
 
 app.Run();

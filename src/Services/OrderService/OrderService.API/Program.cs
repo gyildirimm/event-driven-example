@@ -14,6 +14,7 @@ using OrderService.Persistence;
 using OrderService.Persistence.Contexts;
 using Shared.Kernel.Common.Middlewares;
 using Serilog;
+using Shared.Kernel.Common.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -100,57 +101,6 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<OrderContext>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    
-    try
-    {
-        WaitForDatabase(dbContext, logger);
-        
-        if (dbContext.Database.GetPendingMigrations().Any())
-        {
-            logger.LogInformation("Applying pending migrations...");
-            dbContext.Database.Migrate();
-            logger.LogInformation("Database migrations applied successfully.");
-        }
-        else
-        {
-            logger.LogInformation("No pending migrations found.");
-        }
-    }
-    catch (Exception ex)
-    {
-        logger.LogError(ex, "An error occurred while migrating the database: {Message}", ex.Message);
-        throw;
-    }
-}
-
-static void WaitForDatabase(OrderContext dbContext, ILogger<Program> logger, int maxRetries = 30, int delaySeconds = 2)
-{
-    for (int i = 0; i < maxRetries; i++)
-    {
-        try
-        {
-            dbContext.Database.CanConnect();
-            logger.LogInformation("Successfully connected to the database.");
-            return;
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning("Database connection attempt {Attempt}/{MaxRetries} failed: {Message}", 
-                i + 1, maxRetries, ex.Message);
-            
-            if (i == maxRetries - 1)
-            {
-                logger.LogError("Failed to connect to database after {MaxRetries} attempts.", maxRetries);
-                throw;
-            }
-            
-            Task.Delay(TimeSpan.FromSeconds(delaySeconds)).Wait();
-        }
-    }
-}
+app.UseDatabaseMigrate<OrderContext, Program>();
 
 app.Run();
